@@ -2,7 +2,7 @@ import asyncio
 import matplotlib.pyplot as plt
 import numpy as np
 
-from control import (TransferFunction, bode, feedback, impulse_response, nichols,nyquist_plot,step_response)
+from control import (TransferFunction, bode, feedback, impulse_response, nichols,nyquist_plot,step_response, rootlocus_pid_designer)
 from .pid import my_pid_designer
 from .RampRes import ramp_response
 from .ResponseAnalyzer import ResponseAnalyser
@@ -81,6 +81,7 @@ class MyAPI:
     def pid_version(self, Kp=1, Ki=0, Kd=0):
         instance = MyAPI(self.num, self.den, self.num2, self.den2)
         instance.TF = my_pid_designer(self.TF,Kp0=Kp, Ki0=Ki, Kd0= Kd)
+        # print(instance.TF.ninputs)
         return instance
 
     # def plot_nyquist_diagramme(self):

@@ -107,7 +107,7 @@ def my_pid_designer(plant , sign=+1, input_signal='r',
     if plant.ninputs == 2:
         u_summer = summing_junction(['ufb', 'uff'], 'u')
     else:
-        u_summer = summing_junction(['ufb', 'uff', 'd'], 'u')
+        u_summer = summing_junction(['ufb', 'd'], 'u')
 
     if isctime(plant):
         prop  = tf(1, 1)
@@ -127,14 +127,15 @@ def my_pid_designer(plant , sign=+1, input_signal='r',
         deriv = tf2io(deriv,   inputs='e', outputs='deriv')
 
     # create gain blocks
-    Kpgain = tf2io(tf(Kp0, 1),            inputs='prop_e',  outputs='ufb')
-    Kigain = tf2io(tf(Ki0, 1),            inputs='int_e',   outputs='ufb')
-    Kdgain = tf2io(tf(Kd0, 1),            inputs='deriv',  outputs='ufb')
+    Kpgain = tf2io(tf(Kp0, 1),inputs='prop_e',  outputs='ufb')
+    Kigain = tf2io(tf(Ki0, 1),inputs='int_e',   outputs='ufb')
+    Kdgain = tf2io(tf(Kd0, 1),inputs='deriv',  outputs='ufb')
 
     # the second input and output are used by sisotool to plot step response
     loop = interconnect((plant, Kpgain, Kigain, Kdgain, prop, integ, deriv,
                             C_ff, e_summer, u_summer),
-                            inplist=['r', input_signal],
+                            inplist=['r'],
                             outlist=['y'], check_unused=False)
     cl = loop[0,0] # closed loop transfer function with initial gains
+    # print(cl.ninputs)
     return ss2tf(StateSpace(cl.A, cl.B, cl.C, cl.D, cl.dt))
