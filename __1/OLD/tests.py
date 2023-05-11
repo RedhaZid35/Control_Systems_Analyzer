@@ -1,31 +1,20 @@
 import control as ct
 import numpy as np
-from control import step_response, ss2tf, step_info
+from control import step_response, ss2tf, step_info, forced_response
 from matplotlib import pyplot as plt
 from scipy.signal import TransferFunction
+import datetime as dt
+import matplotlib.animation as animation
+import time 
+# import tmp102
 
-U = 25
-I = 2.2
-R = 1.91
-Ke = 0.0603
-Kc = 0.0603
-L = 0.63e-3
-Jr = 1e-4
+sys = ct.tf([1], [1, 3, 20])
+sys = ct.feedback(sys, sign=-1)
+# print(sys)
 
-C = ct.tf([1],[L, R], inputs='e', outputs='i')
-P = ct.tf(Kc, [Jr, 0], inputs='w', outputs='theta')
-disturbance = ct.summing_junction(['d', 'i'], 'w') # w = d+v
 
-# interconnect everything based on signal names
-sys = ct.interconnect([C, P, disturbance],inputs=['e', 'd'], outputs='theta')
-sys = ct.feedback(sys[0, 0], Ke, sign=-1)
-print(ss2tf(sys))
-# sys = ct.rootlocus_pid_designer(sys,Kp0=1, Ki0=1000, plot=False)
 
-T = np.linspace(0, 0.1, 1000)
-t,y = step_response(sys,E=U, T=T)
-# print(t,y)
-# plt.plot(t,y)
+# plt.plot(response.t,response.y[0])
 # plt.xlabel('Time [s]')
 # plt.ylabel('Amplitude')
 # plt.title('Step response')
@@ -34,3 +23,64 @@ t,y = step_response(sys,E=U, T=T)
 # S = step_info(sys)
 
 
+
+# Create figure for plotting
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+xs = []
+ys = []
+
+# Initialize communication with TMP102
+# tmp102.init()
+
+# This function is called periodically from FuncAnimation
+# def animate(i, xs, ys):
+
+#     # Read temperature (Celsius) from TMP102
+#     temp_c = round(tmp102.read_temp(), 2)
+
+#     # Add x and y to lists
+#     xs.append(dt.datetime.now().strftime('%H:%M:%S.%f'))
+#     ys.append(temp_c)
+
+#     # Limit x and y lists to 20 items
+#     xs = xs[-20:]
+#     ys = ys[-20:]
+
+#     # Draw x and y lists
+#     ax.clear()
+#     ax.plot(xs, ys)
+
+#     # Format plot
+#     plt.xticks(rotation=45, ha='right')
+#     plt.subplots_adjust(bottom=0.30)
+#     plt.title('TMP102 Temperature over Time')
+#     plt.ylabel('Temperature (deg C)')
+
+T = []
+def animate(i):
+    U = np.ones_like(T)
+    response = forced_response(sys,U=U, T=T)
+    # print(response.t,response.y)
+    T.append(T[-1]+0.01)
+
+
+    # Draw x and y lists
+    ax.clear()
+    ax.grid()
+    ax.plot(response.t,response.y[0])
+
+    # Format plot
+    # plt.xticks(rotation=45, ha='right')
+    # plt.subplots_adjust(bottom=0.30)
+    plt.title('TMP102 Temperature over Time')
+    plt.ylabel('Temperature (deg C)') 
+
+# Set up plot to call animate() function periodically
+# ani = animation.FuncAnimation(fig, animate, interval=0.1)
+
+# plt.show()
+
+
+
+print(time.time())

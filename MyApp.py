@@ -402,6 +402,7 @@ class MyFrame (wx.Frame):
             Kp = [float(i) for i in str(self.P_txt.GetValue()).strip().split()]
             Ki = [float(i) for i in str(self.I_txt.GetValue()).strip().split()]
             Kd = [float(i) for i in str(self.D_txt.GetValue()).strip().split()]
+            lable = ""
 
             if not (self.P_check.IsChecked() or self.I_check.IsChecked() or self.D_check.IsChecked()):
                 wx.MessageBox(
@@ -423,15 +424,21 @@ class MyFrame (wx.Frame):
                 self.SetStatusText("Error!!!")
                 return
 
+            if self.P_check.IsChecked():
+                lable += "P"
+            if self.I_check.IsChecked():
+                lable += "I"
+            if self.D_check.IsChecked():
+                lable += "D"
+
             new_system = self.my_system.pid_version(
                 Kp=Kp[0] if self.P_check.IsChecked() and Kp else 1,
                 Ki=Ki[0] if self.I_check.IsChecked() and Ki else 0,
-                Kd=Kd[0] if self.D_check.Enabled and self.D_check.IsChecked(
-                ) and Kd else 0,
+                Kd=Kd[0] if self.D_check.Enabled and self.D_check.IsChecked() and Kd else 0,
             )
 
             t, y, U_val, test = self.calculate_step_r(new_system)
-            self.plot(0, t, y, U_val, lable="With PID")
+            self.plot(0, t, y, U_val, lable="With "+lable)
             self.update_lbls(new_system, test)
             self.SetStatusText("Completed")
             self.Update()
@@ -447,7 +454,7 @@ class MyFrame (wx.Frame):
                 self.my_lables[i].SetLabel(i + " : " + str(test[i]))
         else:
             for i in test:
-                self.my_lables[i].SetLabel(i + " : " + str(test[0]))
+                self.my_lables[i].SetLabel(i + " : " + "Not available")
 
     def calculate_step_r(self, sys):
         U_val = abs([float(i)

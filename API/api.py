@@ -16,13 +16,15 @@ class MyAPI:
         self.num2 = num2
         self.den2 = den2
         self.TF = feedback(TransferFunction(self.num,self.den),sys2 = TransferFunction(self.num2, self.den2))
-        self.poles = self.TF.poles()
-        self.zeros = self.TF.zeros()
+        # self.poles = self.TF.poles()
+        # print(self.poles)
+        # self.zeros = self.TF.zeros()
 
     def is_stable_by_poles_method(self):
-        real_parts = np.real(self.poles)  # Get the real parts of the poles.
+        real_parts = np.real(self.TF.poles())  # Get the real parts of the poles.
         # Check if all the real parts of the poles are negative.
-        if np.all(real_parts < 0):
+        print(real_parts)
+        if np.all(real_parts <= 0):
             return True
         else:
             return False
@@ -81,11 +83,9 @@ class MyAPI:
     def pid_version(self, Kp=1, Ki=0, Kd=0):
         instance = MyAPI(self.num, self.den, self.num2, self.den2)
         instance.TF = my_pid_designer(self.TF,Kp0=Kp, Ki0=Ki, Kd0= Kd)
-        # print(instance.TF.ninputs)
+        # print(instance.TF)
         return instance
 
     # def plot_nyquist_diagramme(self):
     #     print(nyquist_plot(self.TF, plot=False))
     #     plt.show()
-    
-    

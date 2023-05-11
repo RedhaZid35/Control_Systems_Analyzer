@@ -104,10 +104,10 @@ def my_pid_designer(plant , sign=+1, input_signal='r',
 
     # create systems used for interconnections
     e_summer = summing_junction(['r', '-y'], 'e')
-    if plant.ninputs == 2:
-        u_summer = summing_junction(['ufb', 'uff'], 'u')
-    else:
-        u_summer = summing_junction(['ufb', 'd'], 'u')
+    # if plant.ninputs == 2:
+    #     u_summer = summing_junction(['ufb', 'uff'], 'u')
+    # else:
+    u_summer = summing_junction(['ufb', 'd'], 'u')
 
     if isctime(plant):
         prop  = tf(1, 1)
