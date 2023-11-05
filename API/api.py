@@ -23,7 +23,6 @@ class MyAPI:
     def is_stable_by_poles_method(self):
         real_parts = np.real(self.TF.poles())  # Get the real parts of the poles.
         # Check if all the real parts of the poles are negative.
-        print(real_parts)
         if np.all(real_parts <= 0):
             return True
         else:

@@ -1,6 +1,6 @@
 from control import (tf, feedback, ss, tf2ss, tf2io, ss2tf, ss2io, _convert_to_statespace, common_timebase, isctime, interconnect, StateSpace, summing_junction)
 
-def my_pid_designer(plant , sign=+1, input_signal='r',
+def my_pid_designer(plant , sign=-1, input_signal='r',
                            Kp0=0, Ki0=0, Kd0=0, tau=0.01,
                            C_ff=0, derivative_in_feedback_path=False,
                            plot=False):
@@ -132,10 +132,10 @@ def my_pid_designer(plant , sign=+1, input_signal='r',
     Kdgain = tf2io(tf(Kd0, 1),inputs='deriv',  outputs='ufb')
 
     # the second input and output are used by sisotool to plot step response
-    loop = interconnect((plant, Kpgain, Kigain, Kdgain, prop, integ, deriv,
-                            C_ff, e_summer, u_summer),
+    loop = interconnect((plant, Kpgain, Kigain, Kdgain, prop, integ, deriv, e_summer, u_summer),
                             inplist=['r'],
                             outlist=['y'], check_unused=False)
     cl = loop[0,0] # closed loop transfer function with initial gains
     # print(cl.ninputs)
-    return ss2tf(StateSpace(cl.A, cl.B, cl.C, cl.D, cl.dt))
+    sys = ss2tf(StateSpace(cl.A, cl.B, cl.C, cl.D, cl.dt))
+    return sys

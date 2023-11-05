@@ -58,9 +58,9 @@ class MyFrame (wx.Frame):
         self.G_lable = wx.StaticText(
             self, wx.ID_ANY, u"G(s)", wx.DefaultPosition, wx.DefaultSize, 0)
         self.G_num_txt = wx.TextCtrl(
-            self, wx.ID_ANY, "9.571e+05", wx.DefaultPosition, wx.DefaultSize, 0)
+            self, wx.ID_ANY, "5", wx.DefaultPosition, wx.DefaultSize, 0)
         self.G_den_txt = wx.TextCtrl(
-            self, wx.ID_ANY, "1 3032 5.772e+04", wx.DefaultPosition, wx.DefaultSize, 0)
+            self, wx.ID_ANY, "1 3 2 0", wx.DefaultPosition, wx.DefaultSize, 0)
 
         self.H_lable = wx.StaticText(
             self, wx.ID_ANY, u"H(s)", wx.DefaultPosition, wx.DefaultSize, 0)
