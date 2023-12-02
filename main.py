@@ -4,6 +4,8 @@
 from MyApp import MyFrame
 from wx import App
 
+print('zidha is a nice guy')
+
 if __name__ == '__main__':
     app = App()
     frm = MyFrame(None)
